@@ -16,3 +16,26 @@ class GitHub:
         body = r.json()
 
         return body
+    
+    def get_emojis(self, etag_header: str | None = None):
+        headers = {}
+        if etag_header:
+            headers["If-None-Match"] = etag_header
+        
+        r = requests.get("https://api.github.com/emojis", headers=headers)
+      
+        if r.status_code == 200:
+            body = r.json()
+        else:
+            body = None
+    
+        status = r.status_code
+        headers = r.headers
+
+        return body, status, headers
+    
+
+
+
+
+  
