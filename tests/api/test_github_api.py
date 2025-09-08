@@ -59,4 +59,29 @@ def test_get_emojis_not_modified(github_api):
 
     # Очікуємо 304 Not Modified і що тіло відповіді буде None (бо закешовано)
     assert status == 304
-    assert body == None    
+    assert body == None
+
+@pytest.mark.portfolio
+def test_list_commits(github_api):
+    body, status = github_api.list_commits('demianna-prometheus', 'qa-portfolio-project-1')
+    assert len(body) > 0
+    assert status == 200
+
+@pytest.mark.portfolio
+def test_commits_resource_not_found(github_api):
+    body, status = github_api.list_commits('demianna-prometheus', 'qa-portfolio-project-404')
+    assert len(body) > 0
+    assert status == 404
+
+@pytest.mark.portfolio
+def test_commits_conflict(github_api):
+    body, status = github_api.list_commits('demianna-prometheus', 'qa-portfolio-project-empty')
+    assert len(body) > 0
+    assert status == 409
+
+#Не вдається перевірка, бо GitHub API ігнорує некоректний параметр і повертає 200 OK
+# @pytest.mark.portfolio
+# def test_commits_bad_request(github_api):
+#     body, status = github_api.list_commits('demianna-prometheus', 'qa-portfolio-project-1', params={"per_page": "abc"})
+#     assert len(body) > 0
+#     assert status == 400

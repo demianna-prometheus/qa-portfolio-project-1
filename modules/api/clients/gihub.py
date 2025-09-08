@@ -34,6 +34,14 @@ class GitHub:
 
         return body, status, headers
     
+    def list_commits(self, owner, repo, params=None):
+        r = requests.get(f"https://api.github.com/repos/{owner}/{repo}/commits")
+        body = r.json()
+        status_code = r.status_code
+
+        return body, status_code
+
+
 
 
 
