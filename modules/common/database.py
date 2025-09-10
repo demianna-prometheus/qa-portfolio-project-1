@@ -25,6 +25,11 @@ class Database():
         record = self.cursor.fetchall()
         return record
     
+    def update_user_country_by_name(self, name, country):
+        query = f"UPDATE customers SET country = '{country}' WHERE name = '{name}'"
+        self.cursor.execute(query)
+        self.connection.commit()
+    
     def update_product_qnt_by_id(self, product_id, qnt):
         query = f"UPDATE products SET quantity = {qnt} WHERE id = {product_id}"
         self.cursor.execute(query)
@@ -56,3 +61,74 @@ class Database():
         self.cursor.execute(query)
         record = self.cursor.fetchall()
         return record
+    
+    def get_table_columns(self, table_name):
+        query = f"PRAGMA table_info({table_name});"
+        self.cursor.execute(query)  
+        record = self.cursor.fetchall()
+        return record
+    
+    def get_all_products(self):
+        query = f"SELECT id, name FROM products ORDER BY id"
+        self.cursor.execute(query)
+        records = self.cursor.fetchall()
+        return records  
+    
+    def get_distinct_values(self, table_name, column_name):
+        query = f"SELECT DISTINCT {column_name} FROM {table_name}"
+        self.cursor.execute(query)
+        record = self.cursor.fetchall()
+        return record
+    
+    def count_rows(self, table_name):
+        query = f"SELECT COUNT(*) FROM {table_name}"
+        self.cursor.execute(query)
+        record = self.cursor.fetchone()[0]
+        return record
+    
+    def add_new_column(self, table_name, column_name, column_type):
+        query = f"ALTER TABLE {table_name} ADD COLUMN {column_name} {column_type}"
+        self.cursor.execute(query)
+        self.connection.commit()
+        return self.get_table_columns(table_name)
+
+    def drop_column(self, table_name, column_name):
+        query = f"ALTER TABLE {table_name} DROP COLUMN {column_name}"
+        self.cursor.execute(query)
+        self.connection.commit()
+        return self.get_table_columns(table_name)
+    
+    def set_price_for_each_product(self, id, name, price):
+        query = f"UPDATE products SET price = {price} WHERE id = '{id}' AND name = '{name}'"
+        self.cursor.execute(query)
+        self.connection.commit()
+
+    def get_product_price_by_name(self, name):
+        query = f"SELECT price FROM products WHERE name = '{name}'"
+        self.cursor.execute(query)
+        record = self.cursor.fetchall()
+        return record
+    
+    def get_price_column_values(self):
+        query = "SELECT price FROM products"
+        self.cursor.execute(query)
+        records = self.cursor.fetchall()
+        return records
+    
+    def get_max_product_price(self):
+        query = "SELECT MAX(price) FROM products"
+        self.cursor.execute(query)
+        record = self.cursor.fetchone()
+        return record[0]
+    
+    def search_by_pattern(self, table_name, column_name, pattern):
+        query = f"SELECT * FROM {table_name} WHERE {column_name} LIKE '{pattern}'"
+        self.cursor.execute(query)
+        records = self.cursor.fetchall()
+        return records
+    
+    def group_by_column(self, table_name, column_name):
+        query = f"SELECT {column_name}, COUNT(*) FROM {table_name} GROUP BY {column_name} ORDER BY COUNT(*) DESC"
+        self.cursor.execute(query)
+        records = self.cursor.fetchall()
+        return records
