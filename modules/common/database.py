@@ -40,7 +40,7 @@ class Database():
         self.cursor.execute(query)
         record = self.cursor.fetchall()
         return record
-    
+
     def insert_product(self, product_id, name, description, qnt):
         query = f"INSERT OR REPLACE INTO products (id, name, description, quantity) VALUES ({product_id}, '{name}', '{description}', {qnt})"
         self.cursor.execute(query)
@@ -114,7 +114,7 @@ class Database():
         self.cursor.execute(query)
         records = self.cursor.fetchall()
         return records
-    
+
     def get_max_product_price(self):
         query = "SELECT MAX(price) FROM products"
         self.cursor.execute(query)

@@ -8,6 +8,7 @@ class GitHub:
 
         return body
 
+
     def search_repo(self, name):
         r = requests.get(
             "https://api.github.com/search/repositories",
@@ -16,8 +17,9 @@ class GitHub:
         body = r.json()
 
         return body
-    
-    def get_emojis(self, etag_header: str | None = None):
+
+
+    def get_emojis(self, etag_header: str | None=None):
         headers = {}
         if etag_header:
             headers["If-None-Match"] = etag_header
@@ -34,8 +36,9 @@ class GitHub:
 
         return body, status, headers
     
+
     def list_commits(self, owner, repo, params=None):
-        r = requests.get(f"https://api.github.com/repos/{owner}/{repo}/commits")
+        r = requests.get(f"https://api.github.com/repos/{owner}/{repo}/commits", params=params)
         body = r.json()
         status_code = r.status_code
 

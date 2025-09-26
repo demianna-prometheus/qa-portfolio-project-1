@@ -11,24 +11,13 @@ class SignInPage(BasePage):
     def go_to(self):
         self.driver.get(SignInPage.URL)
 
-    def try_login(self, username, password):
-        # Знаходимо поле, в яке будемо вводити неправильне ім'я користувача або поштову адресу
-        login_elem = self.driver.find_element(By.ID, "login_field")
-
-        # Вводимо неправильне ім'я користувача або поштову адрІесу
-        login_elem.send_keys(username)
-
-        # Знаходимо поле, в яке будемо вводити неправильний пароль
-        pass_elem = self.driver.find_element(By.ID, "password")
-
-        # Вводимо неправильний пароль
-        pass_elem.send_keys(password)
-
-        # Знаходимо кнопку sign in
-        btn_elem = self.driver.find_element(By.NAME, "commit")
-
-        # Емулюємо клік лівою кнопкою мишки
-        btn_elem.click()
+    def try_login(self, username, password): 
+        login_elem = self.driver.find_element(By.ID, "login_field")  # Find the field for entering username or email
+        login_elem.send_keys(username)  # Enter username or email
+        pass_elem = self.driver.find_element(By.ID, "password")  # Find the field for entering password
+        pass_elem.send_keys(password)  # Enter password
+        btn_elem = self.driver.find_element(By.NAME, "commit")  # Find the sign in button
+        btn_elem.click()  # Simulate left mouse button click
 
     def check_title(self, expected_title):
         return self.driver.title == expected_title

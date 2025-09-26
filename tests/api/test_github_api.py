@@ -39,6 +39,7 @@ def test_list_emojis(github_api):
     assert status == 200
     assert len(body) > 0
 
+
 @pytest.mark.portfolio
 def test_check_smile_emojis(github_api):
     body, status, headers = github_api.get_emojis()
@@ -48,18 +49,14 @@ def test_check_smile_emojis(github_api):
 @pytest.mark.portfolio
 def test_get_emojis_not_modified(github_api):
     body, status, headers = github_api.get_emojis()
-    # Отримуємо ETag з заголовків відповіді
     etag = headers.get("ETag")
     print(f"ETag отримано: {etag}")
     assert etag
     assert status == 200
-
-    # Тепер робимо повторний запит з If-None-Match
     body, status, headers = github_api.get_emojis(etag_header=etag)
-
-    # Очікуємо 304 Not Modified і що тіло відповіді буде None (бо закешовано)
     assert status == 304
     assert body == None
+
 
 @pytest.mark.portfolio
 def test_list_commits(github_api):
@@ -67,11 +64,13 @@ def test_list_commits(github_api):
     assert len(body) > 0
     assert status == 200
 
+
 @pytest.mark.portfolio
 def test_commits_resource_not_found(github_api):
     body, status = github_api.list_commits('demianna-prometheus', 'qa-portfolio-project-404')
     assert len(body) > 0
     assert status == 404
+
 
 @pytest.mark.portfolio
 def test_commits_conflict(github_api):
@@ -79,9 +78,10 @@ def test_commits_conflict(github_api):
     assert len(body) > 0
     assert status == 409
 
-#Не вдається перевірка, бо GitHub API ігнорує некоректний параметр і повертає 200 OK
-# @pytest.mark.portfolio
-# def test_commits_bad_request(github_api):
-#     body, status = github_api.list_commits('demianna-prometheus', 'qa-portfolio-project-1', params={"per_page": "abc"})
-#     assert len(body) > 0
-#     assert status == 400
+
+@pytest.mark.portfolio
+def test_commits_bad_request(github_api):
+    params = {"per_page": 50, "sha": "main", "since": "2025-01-01T00:00:00Z"}
+    body, status = github_api.list_commits('demianna-prometheus', 'qa-portfolio-project-1', params=params)
+    assert len(body) > 0
+    assert status == 400
